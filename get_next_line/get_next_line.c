@@ -15,7 +15,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
-#define BUFFSIZE 1
+#define BUFFSIZE 500
 
 /* 
 ** Niave Algo - will read in the file based off the number of bytes. Will search 
@@ -23,23 +23,6 @@
 ** before the newline else it will continue to search at the last location.
 **
 */
-
-/*
-int get_next_line(const int fd, char **line)
-{
-//fd will be file to read
-//char **line is the address to the line being read
-//return value is 1,0,-1: read, complete, error 
-//return value w/o '\n' 
-}
-*/
-
-/*  1. Call the read function, search within the buf to see if '\n'
-	2. If so, call another function to see what point in the string. 
-	3. allocate memory. copy over the string, and concatinate the with orig string
-*/
-
-char buf[BUFFSIZE];
 
 int	open_file_read_only(char *filename)
 {
@@ -49,50 +32,55 @@ int	open_file_read_only(char *filename)
 	return (fd);
 }
 
-char *readfile(int fd)
+static void prep_line(char **temp, char **line)
 {
-	char *line;
-	char *copyline; 
-	int rf;
-	int length = 0;
-	int test = 0;
+	char *return_line;
+	int linelength;
+	linelength = ft_strlen(*temp) - ft_strlen(ft_strchr(*temp, '\n'));
+	return_line = ft_strdupn(*temp, linelength);
+	*line = return_line;
+}
 
-	line = ft_strdup("");
-	copyline = ft_strdup("");
-	while (test == 0)
+int get_next_line(const int fd, char **line)
+{
+	char *temp = NULL;
+	char buf[BUFFSIZE + 1];
+	static char *copyline;
+	int rf = 0;
+
+	temp = ft_strdup("");
+	while (!ft_strchr(buf, '\n') && (rf = read(fd,buf,BUFFSIZE)))
 	{
-		rf = read(fd, buf, BUFFSIZE);
-		while (length <= BUFFSIZE)
-		{
-			if (buf[length] == '\n')
-			{
-				test = 1;
-				break;
-			}
-			length++;
-		}
-		copyline = ft_strdupn(buf, length);
-		length = 0;
-		line = ft_strjoin(line, copyline);
+		copyline = ft_strdup(buf);
+		temp = ft_strjoin(temp, copyline);
 	}
-	return (line);
+	if (rf > 0)
+		prep_line(&temp, line);
+	free(temp);
+	return (rf);
 }
 
 int main(int argc, char *argv[])
 {
 	char *filename;
-	char *output;
+	char *line;
 	int fd;
+	int v;
 
 	if (argc != 2)
 		return 0;
 	filename = argv[argc - 1];
-
 	fd = open_file_read_only(filename);
 	if (fd == -1)
+	{
 		printf("%s\n", "Open failed");
-	output  = readfile(fd);
-	printf("%s", output);
+		close(fd);
+	}
+	v = get_next_line(fd, &line);
+	free(line);
+	//printf("First call: %s", line);
+	v = get_next_line(fd, &line);
+	printf("Second call: %s", line);
 	return (0);
 }
 
