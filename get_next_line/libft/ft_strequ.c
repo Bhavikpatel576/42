@@ -1,26 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_strequ.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bpatel <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/12/19 22:25:51 by bpatel            #+#    #+#             */
-/*   Updated: 2016/12/19 22:27:09 by bpatel           ###   ########.fr       */
+/*   Created: 2016/11/10 13:40:45 by bpatel            #+#    #+#             */
+/*   Updated: 2016/11/10 13:44:21 by bpatel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
-# define BUFF_SIZE 4
-# define VAL p = ft_strchr(s[fd], '\n')
-# define FD_PACK files.array[files.index]
-# define PACK pack->array[pack->index]
-# include <sys/types.h>
-# include <sys/uio.h>
-# include <unistd.h>
-# include <libft.h>
+#include <libft.h>
 
-int				get_next_line(const int fd, char **line);
+int	ft_strequ(char const *s1, char const *s2)
+{
+	int i;
 
-#endif
+	i = 0;
+	while ((s1 && s2) && (*s1 == *s2))
+	{
+		if (*s1 == '\0' && *s2 == '\0')
+			return (1);
+		s1++;
+		s2++;
+	}
+	return (0);
+}

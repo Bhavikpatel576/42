@@ -1,26 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_putnbr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bpatel <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/12/19 22:25:51 by bpatel            #+#    #+#             */
-/*   Updated: 2016/12/19 22:27:09 by bpatel           ###   ########.fr       */
+/*   Created: 2016/11/03 01:26:44 by bpatel            #+#    #+#             */
+/*   Updated: 2016/11/03 17:52:05 by bpatel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
-# define BUFF_SIZE 4
-# define VAL p = ft_strchr(s[fd], '\n')
-# define FD_PACK files.array[files.index]
-# define PACK pack->array[pack->index]
-# include <sys/types.h>
-# include <sys/uio.h>
-# include <unistd.h>
-# include <libft.h>
+#include <libft.h>
 
-int				get_next_line(const int fd, char **line);
+void	ft_putnbr(int nb)
+{
+	int min;
 
-#endif
+	min = -2147483648;
+	if (nb == min)
+	{
+		ft_putstr("-2147483648");
+		return ;
+	}
+	if (nb < 0)
+	{
+		ft_putchar('-');
+		nb = -nb;
+	}
+	if (nb <= 9)
+	{
+		ft_putchar(nb + '0');
+		return ;
+	}
+	else
+	{
+		ft_putnbr(nb / 10);
+	}
+	ft_putnbr(nb % 10);
+}

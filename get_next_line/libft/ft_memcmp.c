@@ -1,26 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_memcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bpatel <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/12/19 22:25:51 by bpatel            #+#    #+#             */
-/*   Updated: 2016/12/19 22:27:09 by bpatel           ###   ########.fr       */
+/*   Created: 2016/11/07 17:37:45 by bpatel            #+#    #+#             */
+/*   Updated: 2016/11/07 18:13:30 by bpatel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
-# define BUFF_SIZE 4
-# define VAL p = ft_strchr(s[fd], '\n')
-# define FD_PACK files.array[files.index]
-# define PACK pack->array[pack->index]
-# include <sys/types.h>
-# include <sys/uio.h>
-# include <unistd.h>
-# include <libft.h>
+#include <libft.h>
 
-int				get_next_line(const int fd, char **line);
+int					ft_memcmp(const void *s1, const void *s2, size_t n)
+{
+	int				i;
+	int				diff;
+	unsigned char	*string_one;
+	unsigned char	*string_two;
 
-#endif
+	string_one = (unsigned char *)s1;
+	string_two = (unsigned char *)s2;
+	i = 0;
+	diff = 0;
+	while (n--)
+	{
+		if (*string_one == *string_two)
+		{
+			string_one++;
+			string_two++;
+		}
+		else
+			diff = *string_one - *string_two;
+	}
+	return (diff);
+}

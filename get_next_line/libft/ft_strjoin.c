@@ -1,26 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bpatel <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/12/19 22:25:51 by bpatel            #+#    #+#             */
-/*   Updated: 2016/12/19 22:27:09 by bpatel           ###   ########.fr       */
+/*   Created: 2016/11/10 14:01:05 by bpatel            #+#    #+#             */
+/*   Updated: 2016/11/10 14:44:36 by bpatel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
-# define BUFF_SIZE 4
-# define VAL p = ft_strchr(s[fd], '\n')
-# define FD_PACK files.array[files.index]
-# define PACK pack->array[pack->index]
-# include <sys/types.h>
-# include <sys/uio.h>
-# include <unistd.h>
-# include <libft.h>
+#include <libft.h>
 
-int				get_next_line(const int fd, char **line);
+char		*ft_strjoin(char const *s1, char const *s2)
+{
+	int		total_len;
+	char	*string;
 
-#endif
+	if (!s1 || !s2)
+		return (NULL);
+	total_len = ft_strlen(s1) + ft_strlen(s2);
+	string = (char *)malloc(sizeof(char) * (total_len + 1));
+	if (!string)
+		return (NULL);
+	ft_strcpy(string, s1);
+	ft_strcat(string, s2);
+	return (string);
+}

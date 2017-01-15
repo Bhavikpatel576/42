@@ -1,26 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_strmap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bpatel <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/12/19 22:25:51 by bpatel            #+#    #+#             */
-/*   Updated: 2016/12/19 22:27:09 by bpatel           ###   ########.fr       */
+/*   Created: 2016/11/23 04:21:53 by bpatel            #+#    #+#             */
+/*   Updated: 2016/11/23 04:22:01 by bpatel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
-# define BUFF_SIZE 4
-# define VAL p = ft_strchr(s[fd], '\n')
-# define FD_PACK files.array[files.index]
-# define PACK pack->array[pack->index]
-# include <sys/types.h>
-# include <sys/uio.h>
-# include <unistd.h>
-# include <libft.h>
+#include <libft.h>
 
-int				get_next_line(const int fd, char **line);
+char	*ft_strmap(char const *s, char (*f)(char))
+{
+	char			*r;
+	unsigned int	i;
 
-#endif
+	if (!f || !s)
+		return (0);
+	r = ft_strdup(s);
+	if (!r)
+		return (0);
+	i = 0;
+	while (s[i])
+	{
+		r[i] = f(s[i]);
+		i++;
+	}
+	return (r);
+}

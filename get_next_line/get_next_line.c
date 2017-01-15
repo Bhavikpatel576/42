@@ -6,90 +6,89 @@
 /*   By: bpatel <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/19 22:24:47 by bpatel            #+#    #+#             */
-/*   Updated: 2016/12/19 23:01:32 by bpatel           ###   ########.fr       */
+/*   Updated: 2017/01/12 17:45:26 by bpatel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include "get_next_line.h"
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
-#define BUFFSIZE 2
 
-/* 
-** Niave Algo - will read in the file based off the number of bytes. Will search 
-** the buffer to find a new line. If found it will return the location of the char
-** before the newline else it will continue to search at the last location.
-**
-*/
-
-int	open_file_read_only(char *filename)
+static void		prep_line(char **temp, char **line)
 {
-	int fd;
-	if ((fd = open(filename, O_RDONLY)) == -1)
-		ft_putstr("Open error");
-	return (fd);
-}
-
-static void prep_line(char **temp, char **line)
-{
-	char *return_line;
-	int linelength;
+	char		*return_line;
+	int			linelength;
 
 	linelength = ft_strlen(*temp) - ft_strlen(ft_strchr(*temp, '\n'));
-	return_line = ft_strdupn(*temp, linelength);
+	return_line = ft_strdupn(*temp, (linelength + 1));
+	return_line[linelength] = '\0';
 	*line = return_line;
 }
 
-int get_next_line(const int fd, char **line)
+int				get_next_line(const int fd, char **line)
 {
-	char *temp = NULL;
-	char buf[BUFFSIZE + 1];
+	char		*temp;
+	char		buf[BUFF_SIZE + 1];
 	static char *copyline = NULL;
-	int rf = 0;
+	int			rf;
+	char 		*test;
 
+	ft_bzero(buf, BUFF_SIZE + 1);
+	temp = NULL;
 	temp = ft_strdup("");
+	if (fd < 0 || !line || read(fd, buf, 0))
+		return (-1);
 	if (copyline)
 	{
-		temp = ft_strdup(&ft_strchr(copyline, '\n')[1]); //might need to check for new line in here
-		copyline = &ft_strchr(copyline, '\n')[1];
+		temp = ft_strdup(&ft_strchr(copyline, '\n')[1]);
 	}
-	while (!ft_strchr(buf, '\n') && (rf = read(fd,buf,BUFFSIZE)))
+	while (!(test = ft_strchr(buf, '\n')) && (rf = read(fd, buf, BUFF_SIZE)) > 0)
 	{
+		buf[rf] = '\0';
+		//printf("buf:%s\n", buf);
 		copyline = ft_strdup(buf);
+		//printf("temp:%s\n", temp);
 		temp = ft_strjoin(temp, copyline);
 	}
-	//printf("%s %s\n",temp,copyline);
-	prep_line(&temp, line);
-	free(temp);
-	return (rf);
-}
-
-int main(int argc, char *argv[])
-{
-	char *filename;
-	char *line;
-	int fd;
-	int v;
-
-	if (argc != 2)
-		return 0;
-	filename = argv[argc - 1];
-	fd = open_file_read_only(filename);
-	if (fd == -1)
+	//printf("copyline:%s\n temp:%s\n\n\n",copyline,temp);
+	if (rf > 0)
+		prep_line(&temp, line);
+	if (rf == 0)
 	{
-		printf("%s\n", "Open failed");
-		close(fd);
+		*line = temp;
+		return (0);
 	}
-	v = get_next_line(fd, &line);
-	printf("First call: %s", line);
-	free(line);
-	v = get_next_line(fd, &line);
-	printf("Second call: %s", line);
-	free(line);
-	v = get_next_line(fd, &line);
-	printf("third call: %s", line);
-	return (0);
+	//free(temp);
+	return (1);
 }
 
+int			main(int argc, char **argv)
+{
+	char	*line;
+	int		fd;
+	int		res;
+
+	if (argc != 2 || !argv[0])
+		return (1);
+	
+	res = 0;
+	
+	fd = open(argv[1], O_RDONLY);
+	
+	if ((fd) > 0)
+		while ((res = get_next_line(fd, &line)) > 0)
+			printf("Res: %d, Line: %s\n", res, line);
+	
+	if (res == 0)
+		printf("Res: %d, Line: %s\n", res, line);
+	
+	if ((fd > 0 && (close(fd) == -1 || res != 0)) || fd < 0)
+	{
+		if (!line)
+			write(1, "error\n", 6);
+		return (1);
+	}
+}

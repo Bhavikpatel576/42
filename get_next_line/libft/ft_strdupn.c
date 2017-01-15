@@ -1,26 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_strdupn.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bpatel <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/12/19 22:25:51 by bpatel            #+#    #+#             */
-/*   Updated: 2016/12/19 22:27:09 by bpatel           ###   ########.fr       */
+/*   Created: 2017/01/08 19:11:06 by bpatel            #+#    #+#             */
+/*   Updated: 2017/01/12 17:32:47 by bpatel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
-# define BUFF_SIZE 4
-# define VAL p = ft_strchr(s[fd], '\n')
-# define FD_PACK files.array[files.index]
-# define PACK pack->array[pack->index]
-# include <sys/types.h>
-# include <sys/uio.h>
-# include <unistd.h>
-# include <libft.h>
+#include <libft.h>
 
-int				get_next_line(const int fd, char **line);
+char			*ft_strdupn(const char *s1, size_t size_of_char)
+{
+	size_t		i;
+	char		*test;
 
-#endif
+	i = 0;
+	test = (char*)malloc((size_of_char + 1) * sizeof(char));
+	if (!test)
+		return (NULL);
+	while (i < size_of_char + 1)
+	{
+		test[i] = s1[i];
+		i++;
+	}
+	test[i] = '\0';
+	return (test);
+}
