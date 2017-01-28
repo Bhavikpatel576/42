@@ -17,78 +17,48 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static void		prep_line(char **temp, char **line)
+static int		search(int const fd, char *buff, char *string[fd])
 {
-	char		*return_line;
-	int			linelength;
+	char		*join;
+	char		*p;
+	int			i;
 
-	linelength = ft_strlen(*temp) - ft_strlen(ft_strchr(*temp, '\n'));
-	return_line = ft_strdupn(*temp, (linelength + 1));
-	return_line[linelength] = '\0';
-	*line = return_line;
-}
-
-int				get_next_line(const int fd, char **line)
-{
-	char		*temp;
-	char		buf[BUFF_SIZE + 1];
-	static char *copyline = NULL;
-	int			rf;
-	char 		*test;
-
-	ft_bzero(buf, BUFF_SIZE + 1);
-	temp = NULL;
-	temp = ft_strdup("");
-	if (fd < 0 || !line || read(fd, buf, 0))
-		return (-1);
-	if (copyline)
+	while (!(SL) && (i = read(fd, buff, BUFF_SIZE)) > 0)
 	{
-		temp = ft_strdup(&ft_strchr(copyline, '\n')[1]);
+		buff[i] = '\0';
+		join = string[fd];
+		string[fd] = ft_strjoin(join, buff);
+		ft_strdel(&join);
 	}
-	while (!(test = ft_strchr(buf, '\n')) && (rf = read(fd, buf, BUFF_SIZE)) > 0)
-	{
-		buf[rf] = '\0';
-		//printf("buf:%s\n", buf);
-		copyline = ft_strdup(buf);
-		//printf("temp:%s\n", temp);
-		temp = ft_strjoin(temp, copyline);
-	}
-	//printf("copyline:%s\n temp:%s\n\n\n",copyline,temp);
-	if (rf > 0)
-		prep_line(&temp, line);
-	if (rf == 0)
-	{
-		*line = temp;
+	if (i == 0 && !ft_strlen(string[fd]))
 		return (0);
-	}
-	//free(temp);
+	if (i == -1)
+		return (-1);
 	return (1);
 }
 
-int			main(int argc, char **argv)
+int				get_next_line(int const fd, char **line)
 {
-	char	*line;
-	int		fd;
-	int		res;
+	static char	*string[1025];
+	int			i;
+	char		buff[BUFF_SIZE + 1];
 
-	if (argc != 2 || !argv[0])
-		return (1);
-	
-	res = 0;
-	
-	fd = open(argv[1], O_RDONLY);
-	
-	if ((fd) > 0)
-		while ((res = get_next_line(fd, &line)) > 0)
-			printf("Res: %d, Line: %s\n", res, line);
-	
-	if (res == 0)
-		printf("Res: %d, Line: %s\n", res, line);
-	
-	if ((fd > 0 && (close(fd) == -1 || res != 0)) || fd < 0)
+	if (!line || fd < 0 || read(fd, buff, 0) < 0)
+		return (-1);
+	if (!string[fd])
+		string[fd] = ft_strdup("");
+	if ((i = search(fd, buff, &*string)) == -1)
+		return (-1);
+	*line = string[fd];
+	if (ft_strchr(string[fd], '\n'))
+		*line = ft_strsub(string[fd], 0, S - string[fd]);
+	else
+		*line = ft_strdup(string[fd]);
+	(S ? string[fd] = ft_strdup(S + 1) : ft_strdel(&string[fd]));
+	if (i == 0)
 	{
-		if (!line)
-			write(1, "error\n", 6);
-		return (1);
+		string[fd] = NULL;
+		return (0);
 	}
+	return (1);
 }
