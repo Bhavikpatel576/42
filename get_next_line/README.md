@@ -1,4 +1,4 @@
-Get next line leverages the Libft library to create a function that allows the client to retrieve the first line of a file passed in the standard input. The function will return 1 if successful, 0 if the entire project has been read, and -1 if an error occured. 
+Get Next Line leverages the Libft library to create a function that allows the client to retrieve a single line of a file passed in the standard input, each time it is called. The function will return 1 if successful, 0 if the entire project has been read, and -1 if an error occured. 
 
 
 ##Algorithm and Structure
