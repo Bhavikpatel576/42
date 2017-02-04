@@ -2,7 +2,7 @@ Get next line leverages the Libft library to create a function that allows the c
 
 
 ##Algorithm and Structure
-The function will read the number of bites based off the users defintion of BUFF_SIZE. The function will continue to read the file and build up a string until a '\n' character in the file is found. The built up string will be returned.  
+The function will read the number of bytes based off the user's initialization of BUFF_SIZE. The function will continue to read the file and build up a string until a '\n' character in the file is found. The built up string will be returned.  
 
 ```C
 while (!(SL) && (i = read(fd, buff, BUFF_SIZE)) > 0)
