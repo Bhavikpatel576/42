@@ -26,6 +26,7 @@ SRC		=	ft_memset.c ft_bzero.c ft_memcpy.c ft_memccpy.c ft_memmove.c\
 			ft_strjoin.c ft_strtrim.c ft_strmapi.c ft_print_last_word.c\
 			ft_strsplit.c ft_lstnew.c ft_lstdelone.c ft_lstdel.c ft_swap_bits.c\
 			ft_lstadd.c ft_lstiter.c ft_lstmap.c ft_countl.c ft_reverse_bits.c\
+			get_next_line.c\
 
 OBJ		=	$(SRC:.c=.o)
 
